@@ -1,13 +1,13 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
 	"time"
 
-	"github.com/nanocfw/pagarme-golang-sdk/models"
-
 	"github.com/apimatic/go-core-runtime/https"
 	"github.com/apimatic/go-core-runtime/utilities"
+	"github.com/nanocfw/pagarme-golang-sdk/models"
 )
 
 type ChargesController struct {
@@ -21,12 +21,13 @@ func NewChargesController(baseController baseController) *ChargesController {
 
 // Updates the metadata from a charge
 func (c *ChargesController) UpdateChargeMetadata(
+	ctx context.Context,
 	chargeId string,
 	request *models.UpdateMetadataRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetChargeResponse],
 	error) {
-	req := c.prepareRequest("PATCH", fmt.Sprintf("/Charges/%s/metadata", chargeId))
+	req := c.prepareRequest(ctx, "PATCH", fmt.Sprintf("/Charges/%s/metadata", chargeId))
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -53,12 +54,14 @@ func (c *ChargesController) UpdateChargeMetadata(
 
 // Updates a charge's payment method
 func (c *ChargesController) UpdateChargePaymentMethod(
+	ctx context.Context,
 	chargeId string,
 	request *models.UpdateChargePaymentMethodRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetChargeResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"PATCH",
 		fmt.Sprintf("/charges/%s/payment-method", chargeId),
 	)
@@ -88,12 +91,14 @@ func (c *ChargesController) UpdateChargePaymentMethod(
 
 // TODO: type endpoint description here
 func (c *ChargesController) GetChargeTransactions(
+	ctx context.Context,
 	chargeId string,
 	page *int,
 	size *int) (
 	https.ApiResponse[models.ListChargeTransactionsResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/charges/%s/transactions", chargeId),
 	)
@@ -125,12 +130,13 @@ func (c *ChargesController) GetChargeTransactions(
 
 // Updates the due date from a charge
 func (c *ChargesController) UpdateChargeDueDate(
+	ctx context.Context,
 	chargeId string,
 	request *models.UpdateChargeDueDateRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetChargeResponse],
 	error) {
-	req := c.prepareRequest("PATCH", fmt.Sprintf("/Charges/%s/due-date", chargeId))
+	req := c.prepareRequest(ctx, "PATCH", fmt.Sprintf("/Charges/%s/due-date", chargeId))
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -157,6 +163,7 @@ func (c *ChargesController) UpdateChargeDueDate(
 
 // Lists all charges
 func (c *ChargesController) GetCharges(
+	ctx context.Context,
 	page *int,
 	size *int,
 	code *string,
@@ -168,7 +175,7 @@ func (c *ChargesController) GetCharges(
 	createdUntil *time.Time) (
 	https.ApiResponse[models.ListChargesResponse],
 	error) {
-	req := c.prepareRequest("GET", "/charges")
+	req := c.prepareRequest(ctx, "GET", "/charges")
 	req.Authenticate(true)
 	if page != nil {
 		req.QueryParam("page", *page)
@@ -217,12 +224,13 @@ func (c *ChargesController) GetCharges(
 
 // Captures a charge
 func (c *ChargesController) CaptureCharge(
+	ctx context.Context,
 	chargeId string,
 	request *models.CreateCaptureChargeRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetChargeResponse],
 	error) {
-	req := c.prepareRequest("POST", fmt.Sprintf("/charges/%s/capture", chargeId))
+	req := c.prepareRequest(ctx, "POST", fmt.Sprintf("/charges/%s/capture", chargeId))
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -251,12 +259,13 @@ func (c *ChargesController) CaptureCharge(
 
 // Updates the card from a charge
 func (c *ChargesController) UpdateChargeCard(
+	ctx context.Context,
 	chargeId string,
 	request *models.UpdateChargeCardRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetChargeResponse],
 	error) {
-	req := c.prepareRequest("PATCH", fmt.Sprintf("/charges/%s/card", chargeId))
+	req := c.prepareRequest(ctx, "PATCH", fmt.Sprintf("/charges/%s/card", chargeId))
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -282,10 +291,10 @@ func (c *ChargesController) UpdateChargeCard(
 }
 
 // Get a charge from its id
-func (c *ChargesController) GetCharge(chargeId string) (
+func (c *ChargesController) GetCharge(ctx context.Context, chargeId string) (
 	https.ApiResponse[models.GetChargeResponse],
 	error) {
-	req := c.prepareRequest("GET", fmt.Sprintf("/charges/%s", chargeId))
+	req := c.prepareRequest(ctx, "GET", fmt.Sprintf("/charges/%s", chargeId))
 	req.Authenticate(true)
 
 	decoder, resp, err := req.CallAsJson()
@@ -308,12 +317,13 @@ func (c *ChargesController) GetCharge(chargeId string) (
 
 // TODO: type endpoint description here
 func (c *ChargesController) GetChargesSummary(
+	ctx context.Context,
 	status string,
 	createdSince *time.Time,
 	createdUntil *time.Time) (
 	https.ApiResponse[models.GetChargesSummaryResponse],
 	error) {
-	req := c.prepareRequest("GET", "/charges/summary")
+	req := c.prepareRequest(ctx, "GET", "/charges/summary")
 	req.Authenticate(true)
 	req.QueryParam("status", status)
 	if createdSince != nil {
@@ -342,11 +352,12 @@ func (c *ChargesController) GetChargesSummary(
 
 // Retries a charge
 func (c *ChargesController) RetryCharge(
+	ctx context.Context,
 	chargeId string,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetChargeResponse],
 	error) {
-	req := c.prepareRequest("POST", fmt.Sprintf("/charges/%s/retry", chargeId))
+	req := c.prepareRequest(ctx, "POST", fmt.Sprintf("/charges/%s/retry", chargeId))
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -372,12 +383,13 @@ func (c *ChargesController) RetryCharge(
 
 // Cancel a charge
 func (c *ChargesController) CancelCharge(
+	ctx context.Context,
 	chargeId string,
 	request *models.CreateCancelChargeRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetChargeResponse],
 	error) {
-	req := c.prepareRequest("DELETE", fmt.Sprintf("/charges/%s", chargeId))
+	req := c.prepareRequest(ctx, "DELETE", fmt.Sprintf("/charges/%s", chargeId))
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -406,11 +418,12 @@ func (c *ChargesController) CancelCharge(
 
 // Creates a new charge
 func (c *ChargesController) CreateCharge(
+	ctx context.Context,
 	request *models.CreateChargeRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetChargeResponse],
 	error) {
-	req := c.prepareRequest("POST", "/Charges")
+	req := c.prepareRequest(ctx, "POST", "/Charges")
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -436,12 +449,14 @@ func (c *ChargesController) CreateCharge(
 
 // TODO: type endpoint description here
 func (c *ChargesController) ConfirmPayment(
+	ctx context.Context,
 	chargeId string,
 	request *models.CreateConfirmPaymentRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetChargeResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"POST",
 		fmt.Sprintf("/charges/%s/confirm-payment", chargeId),
 	)

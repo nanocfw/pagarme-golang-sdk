@@ -1,13 +1,13 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
 	"time"
 
-	"github.com/nanocfw/pagarme-golang-sdk/models"
-
 	"github.com/apimatic/go-core-runtime/https"
 	"github.com/apimatic/go-core-runtime/utilities"
+	"github.com/nanocfw/pagarme-golang-sdk/models"
 )
 
 type OrdersController struct {
@@ -21,6 +21,7 @@ func NewOrdersController(baseController baseController) *OrdersController {
 
 // Gets all orders
 func (o *OrdersController) GetOrders(
+	ctx context.Context,
 	page *int,
 	size *int,
 	code *string,
@@ -30,7 +31,7 @@ func (o *OrdersController) GetOrders(
 	customerId *string) (
 	https.ApiResponse[models.ListOrderResponse],
 	error) {
-	req := o.prepareRequest("GET", "/orders")
+	req := o.prepareRequest(ctx, "GET", "/orders")
 	req.Authenticate(true)
 	if page != nil {
 		req.QueryParam("page", *page)
@@ -73,6 +74,7 @@ func (o *OrdersController) GetOrders(
 
 // TODO: type endpoint description here
 func (o *OrdersController) UpdateOrderItem(
+	ctx context.Context,
 	orderId string,
 	itemId string,
 	request *models.UpdateOrderItemRequest,
@@ -80,6 +82,7 @@ func (o *OrdersController) UpdateOrderItem(
 	https.ApiResponse[models.GetOrderItemResponse],
 	error) {
 	req := o.prepareRequest(
+		ctx,
 		"PUT",
 		fmt.Sprintf("/orders/%s/items/%s", orderId, itemId),
 	)
@@ -109,11 +112,12 @@ func (o *OrdersController) UpdateOrderItem(
 
 // TODO: type endpoint description here
 func (o *OrdersController) DeleteAllOrderItems(
+	ctx context.Context,
 	orderId string,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetOrderResponse],
 	error) {
-	req := o.prepareRequest("DELETE", fmt.Sprintf("/orders/%s/items", orderId))
+	req := o.prepareRequest(ctx, "DELETE", fmt.Sprintf("/orders/%s/items", orderId))
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -139,12 +143,14 @@ func (o *OrdersController) DeleteAllOrderItems(
 
 // TODO: type endpoint description here
 func (o *OrdersController) DeleteOrderItem(
+	ctx context.Context,
 	orderId string,
 	itemId string,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetOrderItemResponse],
 	error) {
 	req := o.prepareRequest(
+		ctx,
 		"DELETE",
 		fmt.Sprintf("/orders/%s/items/%s", orderId, itemId),
 	)
@@ -173,12 +179,13 @@ func (o *OrdersController) DeleteOrderItem(
 
 // TODO: type endpoint description here
 func (o *OrdersController) CloseOrder(
+	ctx context.Context,
 	id string,
 	request *models.UpdateOrderStatusRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetOrderResponse],
 	error) {
-	req := o.prepareRequest("PATCH", fmt.Sprintf("/orders/%s/closed", id))
+	req := o.prepareRequest(ctx, "PATCH", fmt.Sprintf("/orders/%s/closed", id))
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -205,11 +212,12 @@ func (o *OrdersController) CloseOrder(
 
 // Creates a new Order
 func (o *OrdersController) CreateOrder(
+	ctx context.Context,
 	body *models.CreateOrderRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetOrderResponse],
 	error) {
-	req := o.prepareRequest("POST", "/orders")
+	req := o.prepareRequest(ctx, "POST", "/orders")
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -235,12 +243,13 @@ func (o *OrdersController) CreateOrder(
 
 // TODO: type endpoint description here
 func (o *OrdersController) CreateOrderItem(
+	ctx context.Context,
 	orderId string,
 	request *models.CreateOrderItemRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetOrderItemResponse],
 	error) {
-	req := o.prepareRequest("POST", fmt.Sprintf("/orders/%s/items", orderId))
+	req := o.prepareRequest(ctx, "POST", fmt.Sprintf("/orders/%s/items", orderId))
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -267,11 +276,13 @@ func (o *OrdersController) CreateOrderItem(
 
 // TODO: type endpoint description here
 func (o *OrdersController) GetOrderItem(
+	ctx context.Context,
 	orderId string,
 	itemId string) (
 	https.ApiResponse[models.GetOrderItemResponse],
 	error) {
 	req := o.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/orders/%s/items/%s", orderId, itemId),
 	)
@@ -297,12 +308,13 @@ func (o *OrdersController) GetOrderItem(
 
 // Updates the metadata from an order
 func (o *OrdersController) UpdateOrderMetadata(
+	ctx context.Context,
 	orderId string,
 	request *models.UpdateMetadataRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetOrderResponse],
 	error) {
-	req := o.prepareRequest("PATCH", fmt.Sprintf("/Orders/%s/metadata", orderId))
+	req := o.prepareRequest(ctx, "PATCH", fmt.Sprintf("/Orders/%s/metadata", orderId))
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -328,10 +340,10 @@ func (o *OrdersController) UpdateOrderMetadata(
 }
 
 // Gets an order
-func (o *OrdersController) GetOrder(orderId string) (
+func (o *OrdersController) GetOrder(ctx context.Context, orderId string) (
 	https.ApiResponse[models.GetOrderResponse],
 	error) {
-	req := o.prepareRequest("GET", fmt.Sprintf("/orders/%s", orderId))
+	req := o.prepareRequest(ctx, "GET", fmt.Sprintf("/orders/%s", orderId))
 	req.Authenticate(true)
 
 	decoder, resp, err := req.CallAsJson()

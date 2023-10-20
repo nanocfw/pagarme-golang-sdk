@@ -1,12 +1,12 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
-
-	"github.com/nanocfw/pagarme-golang-sdk/models"
 
 	"github.com/apimatic/go-core-runtime/https"
 	"github.com/apimatic/go-core-runtime/utilities"
+	"github.com/nanocfw/pagarme-golang-sdk/models"
 )
 
 type TokensController struct {
@@ -20,12 +20,13 @@ func NewTokensController(baseController baseController) *TokensController {
 
 // TODO: type endpoint description here
 func (t *TokensController) CreateToken(
+	ctx context.Context,
 	publicKey string,
 	request *models.CreateTokenRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetTokenResponse],
 	error) {
-	req := t.prepareRequest("POST", fmt.Sprintf("/tokens?appId=%s", publicKey))
+	req := t.prepareRequest(ctx, "POST", fmt.Sprintf("/tokens?appId=%s", publicKey))
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
 	}
@@ -51,11 +52,13 @@ func (t *TokensController) CreateToken(
 
 // Gets a token from its id
 func (t *TokensController) GetToken(
+	ctx context.Context,
 	id string,
 	publicKey string) (
 	https.ApiResponse[models.GetTokenResponse],
 	error) {
 	req := t.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/tokens/%s?appId=%s", id, publicKey),
 	)

@@ -1,13 +1,13 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
 	"time"
 
-	"github.com/nanocfw/pagarme-golang-sdk/models"
-
 	"github.com/apimatic/go-core-runtime/https"
 	"github.com/apimatic/go-core-runtime/utilities"
+	"github.com/nanocfw/pagarme-golang-sdk/models"
 )
 
 type RecipientsController struct {
@@ -21,12 +21,13 @@ func NewRecipientsController(baseController baseController) *RecipientsControlle
 
 // Updates a recipient
 func (r *RecipientsController) UpdateRecipient(
+	ctx context.Context,
 	recipientId string,
 	request *models.UpdateRecipientRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetRecipientResponse],
 	error) {
-	req := r.prepareRequest("PUT", fmt.Sprintf("/recipients/%s", recipientId))
+	req := r.prepareRequest(ctx, "PUT", fmt.Sprintf("/recipients/%s", recipientId))
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -53,12 +54,14 @@ func (r *RecipientsController) UpdateRecipient(
 
 // Creates an anticipation
 func (r *RecipientsController) CreateAnticipation(
+	ctx context.Context,
 	recipientId string,
 	request *models.CreateAnticipationRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetAnticipationResponse],
 	error) {
 	req := r.prepareRequest(
+		ctx,
 		"POST",
 		fmt.Sprintf("/recipients/%s/anticipations", recipientId),
 	)
@@ -88,12 +91,14 @@ func (r *RecipientsController) CreateAnticipation(
 
 // Gets the anticipation limits for a recipient
 func (r *RecipientsController) GetAnticipationLimits(
+	ctx context.Context,
 	recipientId string,
 	timeframe string,
 	paymentDate time.Time) (
 	https.ApiResponse[models.GetAnticipationLimitResponse],
 	error) {
 	req := r.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/recipients/%s/anticipation_limits", recipientId),
 	)
@@ -121,11 +126,12 @@ func (r *RecipientsController) GetAnticipationLimits(
 
 // Retrieves paginated recipients information
 func (r *RecipientsController) GetRecipients(
+	ctx context.Context,
 	page *int,
 	size *int) (
 	https.ApiResponse[models.ListRecipientResponse],
 	error) {
-	req := r.prepareRequest("GET", "/recipients")
+	req := r.prepareRequest(ctx, "GET", "/recipients")
 	req.Authenticate(true)
 	if page != nil {
 		req.QueryParam("page", *page)
@@ -153,11 +159,13 @@ func (r *RecipientsController) GetRecipients(
 
 // TODO: type endpoint description here
 func (r *RecipientsController) GetWithdrawById(
+	ctx context.Context,
 	recipientId string,
 	withdrawalId string) (
 	https.ApiResponse[models.GetWithdrawResponse],
 	error) {
 	req := r.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/recipients/%s/withdrawals/%s", recipientId, withdrawalId),
 	)
@@ -183,12 +191,14 @@ func (r *RecipientsController) GetWithdrawById(
 
 // Updates the default bank account from a recipient
 func (r *RecipientsController) UpdateRecipientDefaultBankAccount(
+	ctx context.Context,
 	recipientId string,
 	request *models.UpdateRecipientBankAccountRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetRecipientResponse],
 	error) {
 	req := r.prepareRequest(
+		ctx,
 		"PATCH",
 		fmt.Sprintf("/recipients/%s/default-bank-account", recipientId),
 	)
@@ -218,12 +228,14 @@ func (r *RecipientsController) UpdateRecipientDefaultBankAccount(
 
 // Updates recipient metadata
 func (r *RecipientsController) UpdateRecipientMetadata(
+	ctx context.Context,
 	recipientId string,
 	request *models.UpdateMetadataRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetRecipientResponse],
 	error) {
 	req := r.prepareRequest(
+		ctx,
 		"PATCH",
 		fmt.Sprintf("/recipients/%s/metadata", recipientId),
 	)
@@ -253,6 +265,7 @@ func (r *RecipientsController) UpdateRecipientMetadata(
 
 // Gets a paginated list of transfers for the recipient
 func (r *RecipientsController) GetTransfers(
+	ctx context.Context,
 	recipientId string,
 	page *int,
 	size *int,
@@ -262,6 +275,7 @@ func (r *RecipientsController) GetTransfers(
 	https.ApiResponse[models.ListTransferResponse],
 	error) {
 	req := r.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/recipients/%s/transfers", recipientId),
 	)
@@ -302,11 +316,13 @@ func (r *RecipientsController) GetTransfers(
 
 // Gets a transfer
 func (r *RecipientsController) GetTransfer(
+	ctx context.Context,
 	recipientId string,
 	transferId string) (
 	https.ApiResponse[models.GetTransferResponse],
 	error) {
 	req := r.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/recipients/%s/transfers/%s", recipientId, transferId),
 	)
@@ -332,11 +348,13 @@ func (r *RecipientsController) GetTransfer(
 
 // TODO: type endpoint description here
 func (r *RecipientsController) CreateWithdraw(
+	ctx context.Context,
 	recipientId string,
 	request *models.CreateWithdrawRequest) (
 	https.ApiResponse[models.GetWithdrawResponse],
 	error) {
 	req := r.prepareRequest(
+		ctx,
 		"POST",
 		fmt.Sprintf("/recipients/%s/withdrawals", recipientId),
 	)
@@ -363,12 +381,14 @@ func (r *RecipientsController) CreateWithdraw(
 
 // Updates recipient metadata
 func (r *RecipientsController) UpdateAutomaticAnticipationSettings(
+	ctx context.Context,
 	recipientId string,
 	request *models.UpdateAutomaticAnticipationSettingsRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetRecipientResponse],
 	error) {
 	req := r.prepareRequest(
+		ctx,
 		"PATCH",
 		fmt.Sprintf("/recipients/%s/automatic-anticipation-settings", recipientId),
 	)
@@ -398,11 +418,13 @@ func (r *RecipientsController) UpdateAutomaticAnticipationSettings(
 
 // Gets an anticipation
 func (r *RecipientsController) GetAnticipation(
+	ctx context.Context,
 	recipientId string,
 	anticipationId string) (
 	https.ApiResponse[models.GetAnticipationResponse],
 	error) {
 	req := r.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/recipients/%s/anticipations/%s", recipientId, anticipationId),
 	)
@@ -428,12 +450,14 @@ func (r *RecipientsController) GetAnticipation(
 
 // TODO: type endpoint description here
 func (r *RecipientsController) UpdateRecipientTransferSettings(
+	ctx context.Context,
 	recipientId string,
 	request *models.UpdateTransferSettingsRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetRecipientResponse],
 	error) {
 	req := r.prepareRequest(
+		ctx,
 		"PATCH",
 		fmt.Sprintf("/recipients/%s/transfer-settings", recipientId),
 	)
@@ -463,6 +487,7 @@ func (r *RecipientsController) UpdateRecipientTransferSettings(
 
 // Retrieves a paginated list of anticipations from a recipient
 func (r *RecipientsController) GetAnticipations(
+	ctx context.Context,
 	recipientId string,
 	page *int,
 	size *int,
@@ -475,6 +500,7 @@ func (r *RecipientsController) GetAnticipations(
 	https.ApiResponse[models.ListAnticipationResponse],
 	error) {
 	req := r.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/recipients/%s/anticipations", recipientId),
 	)
@@ -523,10 +549,10 @@ func (r *RecipientsController) GetAnticipations(
 }
 
 // Retrieves recipient information
-func (r *RecipientsController) GetRecipient(recipientId string) (
+func (r *RecipientsController) GetRecipient(ctx context.Context, recipientId string) (
 	https.ApiResponse[models.GetRecipientResponse],
 	error) {
-	req := r.prepareRequest("GET", fmt.Sprintf("/recipients/%s", recipientId))
+	req := r.prepareRequest(ctx, "GET", fmt.Sprintf("/recipients/%s", recipientId))
 	req.Authenticate(true)
 
 	decoder, resp, err := req.CallAsJson()
@@ -548,10 +574,11 @@ func (r *RecipientsController) GetRecipient(recipientId string) (
 }
 
 // Get balance information for a recipient
-func (r *RecipientsController) GetBalance(recipientId string) (
+func (r *RecipientsController) GetBalance(ctx context.Context, recipientId string) (
 	https.ApiResponse[models.GetBalanceResponse],
 	error) {
 	req := r.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/recipients/%s/balance", recipientId),
 	)
@@ -577,6 +604,7 @@ func (r *RecipientsController) GetBalance(recipientId string) (
 
 // Gets a paginated list of transfers for the recipient
 func (r *RecipientsController) GetWithdrawals(
+	ctx context.Context,
 	recipientId string,
 	page *int,
 	size *int,
@@ -586,6 +614,7 @@ func (r *RecipientsController) GetWithdrawals(
 	https.ApiResponse[models.ListWithdrawals],
 	error) {
 	req := r.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/recipients/%s/withdrawals", recipientId),
 	)
@@ -626,12 +655,14 @@ func (r *RecipientsController) GetWithdrawals(
 
 // Creates a transfer for a recipient
 func (r *RecipientsController) CreateTransfer(
+	ctx context.Context,
 	recipientId string,
 	request *models.CreateTransferRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetTransferResponse],
 	error) {
 	req := r.prepareRequest(
+		ctx,
 		"POST",
 		fmt.Sprintf("/recipients/%s/transfers", recipientId),
 	)
@@ -661,11 +692,12 @@ func (r *RecipientsController) CreateTransfer(
 
 // Creates a new recipient
 func (r *RecipientsController) CreateRecipient(
+	ctx context.Context,
 	request *models.CreateRecipientRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetRecipientResponse],
 	error) {
-	req := r.prepareRequest("POST", "/recipients")
+	req := r.prepareRequest(ctx, "POST", "/recipients")
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -690,10 +722,10 @@ func (r *RecipientsController) CreateRecipient(
 }
 
 // Retrieves recipient information
-func (r *RecipientsController) GetRecipientByCode(code string) (
+func (r *RecipientsController) GetRecipientByCode(ctx context.Context, code string) (
 	https.ApiResponse[models.GetRecipientResponse],
 	error) {
-	req := r.prepareRequest("GET", fmt.Sprintf("/recipients/%s", code))
+	req := r.prepareRequest(ctx, "GET", fmt.Sprintf("/recipients/%s", code))
 	req.Authenticate(true)
 
 	decoder, resp, err := req.CallAsJson()
@@ -715,10 +747,10 @@ func (r *RecipientsController) GetRecipientByCode(code string) (
 }
 
 // TODO: type endpoint description here
-func (r *RecipientsController) GetDefaultRecipient() (
+func (r *RecipientsController) GetDefaultRecipient(ctx context.Context) (
 	https.ApiResponse[models.GetRecipientResponse],
 	error) {
-	req := r.prepareRequest("GET", "/recipients/default")
+	req := r.prepareRequest(ctx, "GET", "/recipients/default")
 	req.Authenticate(true)
 	decoder, resp, err := req.CallAsJson()
 	if err != nil {

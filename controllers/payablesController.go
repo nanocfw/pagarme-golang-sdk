@@ -1,13 +1,13 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
 	"time"
 
-	"github.com/nanocfw/pagarme-golang-sdk/models"
-
 	"github.com/apimatic/go-core-runtime/https"
 	"github.com/apimatic/go-core-runtime/utilities"
+	"github.com/nanocfw/pagarme-golang-sdk/models"
 )
 
 type PayablesController struct {
@@ -21,6 +21,7 @@ func NewPayablesController(baseController baseController) *PayablesController {
 
 // TODO: type endpoint description here
 func (p *PayablesController) GetPayables(
+	ctx context.Context,
 	mType *string,
 	splitId *string,
 	bulkAnticipationId *string,
@@ -41,7 +42,7 @@ func (p *PayablesController) GetPayables(
 	gatewayId *int64) (
 	https.ApiResponse[models.ListPayablesResponse],
 	error) {
-	req := p.prepareRequest("GET", "/payables")
+	req := p.prepareRequest(ctx, "GET", "/payables")
 	req.Authenticate(true)
 	if mType != nil {
 		req.QueryParam("type", *mType)
@@ -116,10 +117,10 @@ func (p *PayablesController) GetPayables(
 }
 
 // TODO: type endpoint description here
-func (p *PayablesController) GetPayableById(id int64) (
+func (p *PayablesController) GetPayableById(ctx context.Context, id int64) (
 	https.ApiResponse[models.GetPayableResponse],
 	error) {
-	req := p.prepareRequest("GET", fmt.Sprintf("/payables/%s", id))
+	req := p.prepareRequest(ctx, "GET", fmt.Sprintf("/payables/%s", id))
 	req.Authenticate(true)
 
 	decoder, resp, err := req.CallAsJson()

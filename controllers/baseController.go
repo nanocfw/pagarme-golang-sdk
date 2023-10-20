@@ -8,9 +8,8 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/nanocfw/pagarme-golang-sdk/errors"
-
 	"github.com/apimatic/go-core-runtime/https"
+	"github.com/nanocfw/pagarme-golang-sdk/errors"
 )
 
 type callBuilderFactory interface {

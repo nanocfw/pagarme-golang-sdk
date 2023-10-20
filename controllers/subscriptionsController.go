@@ -1,14 +1,14 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"time"
 
-	"github.com/nanocfw/pagarme-golang-sdk/models"
-
 	"github.com/apimatic/go-core-runtime/https"
 	"github.com/apimatic/go-core-runtime/utilities"
+	"github.com/nanocfw/pagarme-golang-sdk/models"
 )
 
 type SubscriptionsController struct {
@@ -22,11 +22,13 @@ func NewSubscriptionsController(baseController baseController) *SubscriptionsCon
 
 // TODO: type endpoint description here
 func (s *SubscriptionsController) RenewSubscription(
+	ctx context.Context,
 	subscriptionId string,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetPeriodResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"POST",
 		fmt.Sprintf("/subscriptions/%s/cycles", subscriptionId),
 	)
@@ -55,12 +57,14 @@ func (s *SubscriptionsController) RenewSubscription(
 
 // Updates the credit card from a subscription
 func (s *SubscriptionsController) UpdateSubscriptionCard(
+	ctx context.Context,
 	subscriptionId string,
 	request *models.UpdateSubscriptionCardRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetSubscriptionResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"PATCH",
 		fmt.Sprintf("/subscriptions/%s/card", subscriptionId),
 	)
@@ -90,6 +94,7 @@ func (s *SubscriptionsController) UpdateSubscriptionCard(
 
 // Deletes a usage
 func (s *SubscriptionsController) DeleteUsage(
+	ctx context.Context,
 	subscriptionId string,
 	itemId string,
 	usageId string,
@@ -97,6 +102,7 @@ func (s *SubscriptionsController) DeleteUsage(
 	https.ApiResponse[models.GetUsageResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"DELETE",
 		fmt.Sprintf("/subscriptions/%s/items/%s/usages/%s", subscriptionId, itemId, usageId),
 	)
@@ -125,12 +131,14 @@ func (s *SubscriptionsController) DeleteUsage(
 
 // Creates a discount
 func (s *SubscriptionsController) CreateDiscount(
+	ctx context.Context,
 	subscriptionId string,
 	request *models.CreateDiscountRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetDiscountResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"POST",
 		fmt.Sprintf("/subscriptions/%s/discounts", subscriptionId),
 	)
@@ -160,12 +168,14 @@ func (s *SubscriptionsController) CreateDiscount(
 
 // Create Usage
 func (s *SubscriptionsController) CreateAnUsage(
+	ctx context.Context,
 	subscriptionId string,
 	itemId string,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetUsageResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"POST",
 		fmt.Sprintf("/subscriptions/%s/items/%s/usages", subscriptionId, itemId),
 	)
@@ -194,12 +204,14 @@ func (s *SubscriptionsController) CreateAnUsage(
 
 // TODO: type endpoint description here
 func (s *SubscriptionsController) UpdateCurrentCycleStatus(
+	ctx context.Context,
 	subscriptionId string,
 	request *models.UpdateCurrentCycleStatusRequest,
 	idempotencyKey *string) (
 	*http.Response,
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"PATCH",
 		fmt.Sprintf("/subscriptions/%s/cycle-status", subscriptionId),
 	)
@@ -209,22 +221,24 @@ func (s *SubscriptionsController) UpdateCurrentCycleStatus(
 	}
 	req.Json(request)
 
-	context, err := req.Call()
-	err = validateResponse(*context.Response)
+	httpContext, _ := req.Call()
+	err := validateResponse(*httpContext.Response)
 	if err != nil {
-		return context.Response, err
+		return httpContext.Response, err
 	}
-	return context.Response, err
+	return httpContext.Response, err
 }
 
 // Deletes a discount
 func (s *SubscriptionsController) DeleteDiscount(
+	ctx context.Context,
 	subscriptionId string,
 	discountId string,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetDiscountResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"DELETE",
 		fmt.Sprintf("/subscriptions/%s/discounts/%s", subscriptionId, discountId),
 	)
@@ -253,6 +267,7 @@ func (s *SubscriptionsController) DeleteDiscount(
 
 // Get Subscription Items
 func (s *SubscriptionsController) GetSubscriptionItems(
+	ctx context.Context,
 	subscriptionId string,
 	page *int,
 	size *int,
@@ -265,6 +280,7 @@ func (s *SubscriptionsController) GetSubscriptionItems(
 	https.ApiResponse[models.ListSubscriptionItemsResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/subscriptions/%s/items", subscriptionId),
 	)
@@ -314,12 +330,14 @@ func (s *SubscriptionsController) GetSubscriptionItems(
 
 // Updates the payment method from a subscription
 func (s *SubscriptionsController) UpdateSubscriptionPaymentMethod(
+	ctx context.Context,
 	subscriptionId string,
 	request *models.UpdateSubscriptionPaymentMethodRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetSubscriptionResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"PATCH",
 		fmt.Sprintf("/subscriptions/%s/payment-method", subscriptionId),
 	)
@@ -349,11 +367,13 @@ func (s *SubscriptionsController) UpdateSubscriptionPaymentMethod(
 
 // Get Subscription Item
 func (s *SubscriptionsController) GetSubscriptionItem(
+	ctx context.Context,
 	subscriptionId string,
 	itemId string) (
 	https.ApiResponse[models.GetSubscriptionItemResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/subscriptions/%s/items/%s", subscriptionId, itemId),
 	)
@@ -379,6 +399,7 @@ func (s *SubscriptionsController) GetSubscriptionItem(
 
 // Gets all subscriptions
 func (s *SubscriptionsController) GetSubscriptions(
+	ctx context.Context,
 	page *int,
 	size *int,
 	code *string,
@@ -393,7 +414,7 @@ func (s *SubscriptionsController) GetSubscriptions(
 	createdUntil *time.Time) (
 	https.ApiResponse[models.ListSubscriptionsResponse],
 	error) {
-	req := s.prepareRequest("GET", "/subscriptions")
+	req := s.prepareRequest(ctx, "GET", "/subscriptions")
 	req.Authenticate(true)
 	if page != nil {
 		req.QueryParam("page", *page)
@@ -451,12 +472,14 @@ func (s *SubscriptionsController) GetSubscriptions(
 
 // Cancels a subscription
 func (s *SubscriptionsController) CancelSubscription(
+	ctx context.Context,
 	subscriptionId string,
 	request *models.CreateCancelSubscriptionRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetSubscriptionResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"DELETE",
 		fmt.Sprintf("/subscriptions/%s", subscriptionId),
 	)
@@ -488,12 +511,14 @@ func (s *SubscriptionsController) CancelSubscription(
 
 // Creates a increment
 func (s *SubscriptionsController) CreateIncrement(
+	ctx context.Context,
 	subscriptionId string,
 	request *models.CreateIncrementRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetIncrementResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"POST",
 		fmt.Sprintf("/subscriptions/%s/increments", subscriptionId),
 	)
@@ -523,6 +548,7 @@ func (s *SubscriptionsController) CreateIncrement(
 
 // Creates a usage
 func (s *SubscriptionsController) CreateUsage(
+	ctx context.Context,
 	subscriptionId string,
 	itemId string,
 	body *models.CreateUsageRequest,
@@ -530,6 +556,7 @@ func (s *SubscriptionsController) CreateUsage(
 	https.ApiResponse[models.GetUsageResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"POST",
 		fmt.Sprintf("/subscriptions/%s/items/%s/usages", subscriptionId, itemId),
 	)
@@ -559,11 +586,13 @@ func (s *SubscriptionsController) CreateUsage(
 
 // TODO: type endpoint description here
 func (s *SubscriptionsController) GetDiscountById(
+	ctx context.Context,
 	subscriptionId string,
 	discountId string) (
 	https.ApiResponse[models.GetDiscountResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/subscriptions/%s/discounts/%s", subscriptionId, discountId),
 	)
@@ -589,11 +618,12 @@ func (s *SubscriptionsController) GetDiscountById(
 
 // Creates a new subscription
 func (s *SubscriptionsController) CreateSubscription(
+	ctx context.Context,
 	body *models.CreateSubscriptionRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetSubscriptionResponse],
 	error) {
-	req := s.prepareRequest("POST", "/subscriptions")
+	req := s.prepareRequest(ctx, "POST", "/subscriptions")
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -619,11 +649,13 @@ func (s *SubscriptionsController) CreateSubscription(
 
 // TODO: type endpoint description here
 func (s *SubscriptionsController) GetIncrementById(
+	ctx context.Context,
 	subscriptionId string,
 	incrementId string) (
 	https.ApiResponse[models.GetIncrementResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/subscriptions/%s/increments/%s", subscriptionId, incrementId),
 	)
@@ -649,12 +681,14 @@ func (s *SubscriptionsController) GetIncrementById(
 
 // TODO: type endpoint description here
 func (s *SubscriptionsController) UpdateSubscriptionAffiliationId(
+	ctx context.Context,
 	subscriptionId string,
 	request *models.UpdateSubscriptionAffiliationIdRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetSubscriptionResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"PATCH",
 		fmt.Sprintf("/subscriptions/%s/gateway-affiliation-id", subscriptionId),
 	)
@@ -684,12 +718,14 @@ func (s *SubscriptionsController) UpdateSubscriptionAffiliationId(
 
 // Updates the metadata from a subscription
 func (s *SubscriptionsController) UpdateSubscriptionMetadata(
+	ctx context.Context,
 	subscriptionId string,
 	request *models.UpdateMetadataRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetSubscriptionResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"PATCH",
 		fmt.Sprintf("/Subscriptions/%s/metadata", subscriptionId),
 	)
@@ -719,12 +755,14 @@ func (s *SubscriptionsController) UpdateSubscriptionMetadata(
 
 // Deletes a increment
 func (s *SubscriptionsController) DeleteIncrement(
+	ctx context.Context,
 	subscriptionId string,
 	incrementId string,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetIncrementResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"DELETE",
 		fmt.Sprintf("/subscriptions/%s/increments/%s", subscriptionId, incrementId),
 	)
@@ -753,12 +791,14 @@ func (s *SubscriptionsController) DeleteIncrement(
 
 // TODO: type endpoint description here
 func (s *SubscriptionsController) GetSubscriptionCycles(
+	ctx context.Context,
 	subscriptionId string,
 	page string,
 	size string) (
 	https.ApiResponse[models.ListCyclesResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/subscriptions/%s/cycles", subscriptionId),
 	)
@@ -786,12 +826,14 @@ func (s *SubscriptionsController) GetSubscriptionCycles(
 
 // TODO: type endpoint description here
 func (s *SubscriptionsController) GetDiscounts(
+	ctx context.Context,
 	subscriptionId string,
 	page int,
 	size int) (
 	https.ApiResponse[models.ListDiscountsResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/subscriptions/%s/discounts/", subscriptionId),
 	)
@@ -819,12 +861,14 @@ func (s *SubscriptionsController) GetDiscounts(
 
 // Updates the billing date from a subscription
 func (s *SubscriptionsController) UpdateSubscriptionBillingDate(
+	ctx context.Context,
 	subscriptionId string,
 	request *models.UpdateSubscriptionBillingDateRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetSubscriptionResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"PATCH",
 		fmt.Sprintf("/subscriptions/%s/billing-date", subscriptionId),
 	)
@@ -854,12 +898,14 @@ func (s *SubscriptionsController) UpdateSubscriptionBillingDate(
 
 // Deletes a subscription item
 func (s *SubscriptionsController) DeleteSubscriptionItem(
+	ctx context.Context,
 	subscriptionId string,
 	subscriptionItemId string,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetSubscriptionItemResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"DELETE",
 		fmt.Sprintf("/subscriptions/%s/items/%s", subscriptionId, subscriptionItemId),
 	)
@@ -888,12 +934,14 @@ func (s *SubscriptionsController) DeleteSubscriptionItem(
 
 // TODO: type endpoint description here
 func (s *SubscriptionsController) GetIncrements(
+	ctx context.Context,
 	subscriptionId string,
 	page *int,
 	size *int) (
 	https.ApiResponse[models.ListIncrementsResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/subscriptions/%s/increments/", subscriptionId),
 	)
@@ -925,12 +973,14 @@ func (s *SubscriptionsController) GetIncrements(
 
 // Updates the boleto due days from a subscription
 func (s *SubscriptionsController) UpdateSubscriptionDueDays(
+	ctx context.Context,
 	subscriptionId string,
 	request *models.UpdateSubscriptionDueDaysRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetSubscriptionResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"PATCH",
 		fmt.Sprintf("/subscriptions/%s/boleto-due-days", subscriptionId),
 	)
@@ -960,12 +1010,14 @@ func (s *SubscriptionsController) UpdateSubscriptionDueDays(
 
 // Updates the start at date from a subscription
 func (s *SubscriptionsController) UpdateSubscriptionStartAt(
+	ctx context.Context,
 	subscriptionId string,
 	request *models.UpdateSubscriptionStartAtRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetSubscriptionResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"PATCH",
 		fmt.Sprintf("/subscriptions/%s/start-at", subscriptionId),
 	)
@@ -995,6 +1047,7 @@ func (s *SubscriptionsController) UpdateSubscriptionStartAt(
 
 // Updates a subscription item
 func (s *SubscriptionsController) UpdateSubscriptionItem(
+	ctx context.Context,
 	subscriptionId string,
 	itemId string,
 	body *models.UpdateSubscriptionItemRequest,
@@ -1002,6 +1055,7 @@ func (s *SubscriptionsController) UpdateSubscriptionItem(
 	https.ApiResponse[models.GetSubscriptionItemResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"PUT",
 		fmt.Sprintf("/subscriptions/%s/items/%s", subscriptionId, itemId),
 	)
@@ -1031,12 +1085,14 @@ func (s *SubscriptionsController) UpdateSubscriptionItem(
 
 // Creates a new Subscription item
 func (s *SubscriptionsController) CreateSubscriptionItem(
+	ctx context.Context,
 	subscriptionId string,
 	request *models.CreateSubscriptionItemRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetSubscriptionItemResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"POST",
 		fmt.Sprintf("/subscriptions/%s/items", subscriptionId),
 	)
@@ -1065,10 +1121,11 @@ func (s *SubscriptionsController) CreateSubscriptionItem(
 }
 
 // Gets a subscription
-func (s *SubscriptionsController) GetSubscription(subscriptionId string) (
+func (s *SubscriptionsController) GetSubscription(ctx context.Context, subscriptionId string) (
 	https.ApiResponse[models.GetSubscriptionResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/subscriptions/%s", subscriptionId),
 	)
@@ -1094,6 +1151,7 @@ func (s *SubscriptionsController) GetSubscription(subscriptionId string) (
 
 // Lists all usages from a subscription item
 func (s *SubscriptionsController) GetUsages(
+	ctx context.Context,
 	subscriptionId string,
 	itemId string,
 	page *int,
@@ -1105,6 +1163,7 @@ func (s *SubscriptionsController) GetUsages(
 	https.ApiResponse[models.ListUsagesResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/subscriptions/%s/items/%s/usages", subscriptionId, itemId),
 	)
@@ -1148,12 +1207,14 @@ func (s *SubscriptionsController) GetUsages(
 
 // TODO: type endpoint description here
 func (s *SubscriptionsController) UpdateLatestPeriodEndAt(
+	ctx context.Context,
 	subscriptionId string,
 	request *models.UpdateCurrentCycleEndDateRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetSubscriptionResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"PATCH",
 		fmt.Sprintf("/subscriptions/%s/periods/latest/end-at", subscriptionId),
 	)
@@ -1183,12 +1244,14 @@ func (s *SubscriptionsController) UpdateLatestPeriodEndAt(
 
 // Atualização do valor mínimo da assinatura
 func (s *SubscriptionsController) UpdateSubscriptionMiniumPrice(
+	ctx context.Context,
 	subscriptionId string,
 	request *models.UpdateSubscriptionMinimumPriceRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetSubscriptionResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"PATCH",
 		fmt.Sprintf("/subscriptions/%s/minimum_price", subscriptionId),
 	)
@@ -1218,11 +1281,13 @@ func (s *SubscriptionsController) UpdateSubscriptionMiniumPrice(
 
 // TODO: type endpoint description here
 func (s *SubscriptionsController) GetSubscriptionCycleById(
+	ctx context.Context,
 	subscriptionId string,
 	cycleId string) (
 	https.ApiResponse[models.GetPeriodResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/subscriptions/%s/cycles/%s", subscriptionId, cycleId),
 	)
@@ -1248,11 +1313,13 @@ func (s *SubscriptionsController) GetSubscriptionCycleById(
 
 // TODO: type endpoint description here
 func (s *SubscriptionsController) GetUsageReport(
+	ctx context.Context,
 	subscriptionId string,
 	periodId string) (
 	https.ApiResponse[models.GetUsageReportResponse],
 	error) {
 	req := s.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/subscriptions/%s/periods/%s/usages/report", subscriptionId, periodId),
 	)
@@ -1278,11 +1345,12 @@ func (s *SubscriptionsController) GetUsageReport(
 
 // TODO: type endpoint description here
 func (s *SubscriptionsController) UpdateSplitSubscription(
+	ctx context.Context,
 	id string,
 	request *models.UpdateSubscriptionSplitRequest) (
 	https.ApiResponse[models.GetSubscriptionResponse],
 	error) {
-	req := s.prepareRequest("PATCH", fmt.Sprintf("/subscriptions/%s/split", id))
+	req := s.prepareRequest(ctx, "PATCH", fmt.Sprintf("/subscriptions/%s/split", id))
 	req.Authenticate(true)
 	req.Json(request)
 

@@ -1,12 +1,12 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
-
-	"github.com/nanocfw/pagarme-golang-sdk/models"
 
 	"github.com/apimatic/go-core-runtime/https"
 	"github.com/apimatic/go-core-runtime/utilities"
+	"github.com/nanocfw/pagarme-golang-sdk/models"
 )
 
 type TransactionsController struct {
@@ -19,10 +19,10 @@ func NewTransactionsController(baseController baseController) *TransactionsContr
 }
 
 // TODO: type endpoint description here
-func (t *TransactionsController) GetTransaction(transactionId string) (
+func (t *TransactionsController) GetTransaction(ctx context.Context, transactionId string) (
 	https.ApiResponse[models.GetTransactionResponseInterface],
 	error) {
-	req := t.prepareRequest("GET", fmt.Sprintf("/transactions/%s", transactionId))
+	req := t.prepareRequest(ctx, "GET", fmt.Sprintf("/transactions/%s", transactionId))
 	req.Authenticate(true)
 
 	decoder, resp, err := req.CallAsJson()

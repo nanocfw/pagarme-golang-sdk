@@ -1,12 +1,12 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
-
-	"github.com/nanocfw/pagarme-golang-sdk/models"
 
 	"github.com/apimatic/go-core-runtime/https"
 	"github.com/apimatic/go-core-runtime/utilities"
+	"github.com/nanocfw/pagarme-golang-sdk/models"
 )
 
 type CustomersController struct {
@@ -20,6 +20,7 @@ func NewCustomersController(baseController baseController) *CustomersController 
 
 // Updates a card
 func (c *CustomersController) UpdateCard(
+	ctx context.Context,
 	customerId string,
 	cardId string,
 	request *models.UpdateCardRequest,
@@ -27,6 +28,7 @@ func (c *CustomersController) UpdateCard(
 	https.ApiResponse[models.GetCardResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"PUT",
 		fmt.Sprintf("/customers/%s/cards/%s", customerId, cardId),
 	)
@@ -56,6 +58,7 @@ func (c *CustomersController) UpdateCard(
 
 // Updates an address
 func (c *CustomersController) UpdateAddress(
+	ctx context.Context,
 	customerId string,
 	addressId string,
 	request *models.UpdateAddressRequest,
@@ -63,6 +66,7 @@ func (c *CustomersController) UpdateAddress(
 	https.ApiResponse[models.GetAddressResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"PUT",
 		fmt.Sprintf("/customers/%s/addresses/%s", customerId, addressId),
 	)
@@ -92,12 +96,14 @@ func (c *CustomersController) UpdateAddress(
 
 // Delete a customer's access token
 func (c *CustomersController) DeleteAccessToken(
+	ctx context.Context,
 	customerId string,
 	tokenId string,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetAccessTokenResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"DELETE",
 		fmt.Sprintf("/customers/%s/access-tokens/%s", customerId, tokenId),
 	)
@@ -126,11 +132,12 @@ func (c *CustomersController) DeleteAccessToken(
 
 // Creates a new customer
 func (c *CustomersController) CreateCustomer(
+	ctx context.Context,
 	request *models.CreateCustomerRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetCustomerResponse],
 	error) {
-	req := c.prepareRequest("POST", "/customers")
+	req := c.prepareRequest(ctx, "POST", "/customers")
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -156,12 +163,14 @@ func (c *CustomersController) CreateCustomer(
 
 // Creates a new address for a customer
 func (c *CustomersController) CreateAddress(
+	ctx context.Context,
 	customerId string,
 	request *models.CreateAddressRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetAddressResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"POST",
 		fmt.Sprintf("/customers/%s/addresses", customerId),
 	)
@@ -190,10 +199,11 @@ func (c *CustomersController) CreateAddress(
 }
 
 // Delete a Customer's access tokens
-func (c *CustomersController) DeleteAccessTokens(customerId string) (
+func (c *CustomersController) DeleteAccessTokens(ctx context.Context, customerId string) (
 	https.ApiResponse[models.ListAccessTokensResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/customers/%s/access-tokens/", customerId),
 	)
@@ -219,11 +229,13 @@ func (c *CustomersController) DeleteAccessTokens(customerId string) (
 
 // Get a customer's address
 func (c *CustomersController) GetAddress(
+	ctx context.Context,
 	customerId string,
 	addressId string) (
 	https.ApiResponse[models.GetAddressResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/customers/%s/addresses/%s", customerId, addressId),
 	)
@@ -249,12 +261,14 @@ func (c *CustomersController) GetAddress(
 
 // Delete a Customer's address
 func (c *CustomersController) DeleteAddress(
+	ctx context.Context,
 	customerId string,
 	addressId string,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetAddressResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"DELETE",
 		fmt.Sprintf("/customers/%s/addresses/%s", customerId, addressId),
 	)
@@ -283,12 +297,13 @@ func (c *CustomersController) DeleteAddress(
 
 // Creates a new card for a customer
 func (c *CustomersController) CreateCard(
+	ctx context.Context,
 	customerId string,
 	request *models.CreateCardRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetCardResponse],
 	error) {
-	req := c.prepareRequest("POST", fmt.Sprintf("/customers/%s/cards", customerId))
+	req := c.prepareRequest(ctx, "POST", fmt.Sprintf("/customers/%s/cards", customerId))
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -315,6 +330,7 @@ func (c *CustomersController) CreateCard(
 
 // Get all Customers
 func (c *CustomersController) GetCustomers(
+	ctx context.Context,
 	name *string,
 	document *string,
 	page *int,
@@ -323,7 +339,7 @@ func (c *CustomersController) GetCustomers(
 	code *string) (
 	https.ApiResponse[models.ListCustomersResponse],
 	error) {
-	req := c.prepareRequest("GET", "/customers")
+	req := c.prepareRequest(ctx, "GET", "/customers")
 	req.Authenticate(true)
 	if name != nil {
 		req.QueryParam("name", *name)
@@ -363,12 +379,13 @@ func (c *CustomersController) GetCustomers(
 
 // Updates a customer
 func (c *CustomersController) UpdateCustomer(
+	ctx context.Context,
 	customerId string,
 	request *models.UpdateCustomerRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetCustomerResponse],
 	error) {
-	req := c.prepareRequest("PUT", fmt.Sprintf("/customers/%s", customerId))
+	req := c.prepareRequest(ctx, "PUT", fmt.Sprintf("/customers/%s", customerId))
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -395,12 +412,14 @@ func (c *CustomersController) UpdateCustomer(
 
 // Creates a access token for a customer
 func (c *CustomersController) CreateAccessToken(
+	ctx context.Context,
 	customerId string,
 	request *models.CreateAccessTokenRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetAccessTokenResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"POST",
 		fmt.Sprintf("/customers/%s/access-tokens", customerId),
 	)
@@ -430,12 +449,14 @@ func (c *CustomersController) CreateAccessToken(
 
 // Get all access tokens from a customer
 func (c *CustomersController) GetAccessTokens(
+	ctx context.Context,
 	customerId string,
 	page *int,
 	size *int) (
 	https.ApiResponse[models.ListAccessTokensResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/customers/%s/access-tokens", customerId),
 	)
@@ -467,12 +488,13 @@ func (c *CustomersController) GetAccessTokens(
 
 // Get all cards from a customer
 func (c *CustomersController) GetCards(
+	ctx context.Context,
 	customerId string,
 	page *int,
 	size *int) (
 	https.ApiResponse[models.ListCardsResponse],
 	error) {
-	req := c.prepareRequest("GET", fmt.Sprintf("/customers/%s/cards", customerId))
+	req := c.prepareRequest(ctx, "GET", fmt.Sprintf("/customers/%s/cards", customerId))
 	req.Authenticate(true)
 	if page != nil {
 		req.QueryParam("page", *page)
@@ -501,12 +523,14 @@ func (c *CustomersController) GetCards(
 
 // Renew a card
 func (c *CustomersController) RenewCard(
+	ctx context.Context,
 	customerId string,
 	cardId string,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetCardResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"POST",
 		fmt.Sprintf("/customers/%s/cards/%s/renew", customerId, cardId),
 	)
@@ -535,11 +559,13 @@ func (c *CustomersController) RenewCard(
 
 // Get a Customer's access token
 func (c *CustomersController) GetAccessToken(
+	ctx context.Context,
 	customerId string,
 	tokenId string) (
 	https.ApiResponse[models.GetAccessTokenResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/customers/%s/access-tokens/%s", customerId, tokenId),
 	)
@@ -565,12 +591,14 @@ func (c *CustomersController) GetAccessToken(
 
 // Updates the metadata a customer
 func (c *CustomersController) UpdateCustomerMetadata(
+	ctx context.Context,
 	customerId string,
 	request *models.UpdateMetadataRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetCustomerResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"PATCH",
 		fmt.Sprintf("/Customers/%s/metadata", customerId),
 	)
@@ -600,12 +628,14 @@ func (c *CustomersController) UpdateCustomerMetadata(
 
 // Delete a customer's card
 func (c *CustomersController) DeleteCard(
+	ctx context.Context,
 	customerId string,
 	cardId string,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetCardResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"DELETE",
 		fmt.Sprintf("/customers/%s/cards/%s", customerId, cardId),
 	)
@@ -634,12 +664,14 @@ func (c *CustomersController) DeleteCard(
 
 // Gets all adressess from a customer
 func (c *CustomersController) GetAddresses(
+	ctx context.Context,
 	customerId string,
 	page *int,
 	size *int) (
 	https.ApiResponse[models.ListAddressesResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/customers/%s/addresses", customerId),
 	)
@@ -670,10 +702,10 @@ func (c *CustomersController) GetAddresses(
 }
 
 // Get a customer
-func (c *CustomersController) GetCustomer(customerId string) (
+func (c *CustomersController) GetCustomer(ctx context.Context, customerId string) (
 	https.ApiResponse[models.GetCustomerResponse],
 	error) {
-	req := c.prepareRequest("GET", fmt.Sprintf("/customers/%s", customerId))
+	req := c.prepareRequest(ctx, "GET", fmt.Sprintf("/customers/%s", customerId))
 	req.Authenticate(true)
 
 	decoder, resp, err := req.CallAsJson()
@@ -696,11 +728,13 @@ func (c *CustomersController) GetCustomer(customerId string) (
 
 // Get a customer's card
 func (c *CustomersController) GetCard(
+	ctx context.Context,
 	customerId string,
 	cardId string) (
 	https.ApiResponse[models.GetCardResponse],
 	error) {
 	req := c.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/customers/%s/cards/%s", customerId, cardId),
 	)

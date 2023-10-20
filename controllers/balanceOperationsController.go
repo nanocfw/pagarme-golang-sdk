@@ -1,13 +1,13 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
 	"time"
 
-	"github.com/nanocfw/pagarme-golang-sdk/models"
-
 	"github.com/apimatic/go-core-runtime/https"
 	"github.com/apimatic/go-core-runtime/utilities"
+	"github.com/nanocfw/pagarme-golang-sdk/models"
 )
 
 type BalanceOperationsController struct {
@@ -21,12 +21,13 @@ func NewBalanceOperationsController(baseController baseController) *BalanceOpera
 
 // TODO: type endpoint description here
 func (b *BalanceOperationsController) GetBalanceOperations(
+	ctx context.Context,
 	status *string,
 	createdSince *time.Time,
 	createdUntil *time.Time) (
 	https.ApiResponse[models.ListBalanceOperationResponse],
 	error) {
-	req := b.prepareRequest("GET", "/balance/operations")
+	req := b.prepareRequest(ctx, "GET", "/balance/operations")
 	req.Authenticate(true)
 	if status != nil {
 		req.QueryParam("status", *status)
@@ -56,10 +57,10 @@ func (b *BalanceOperationsController) GetBalanceOperations(
 }
 
 // TODO: type endpoint description here
-func (b *BalanceOperationsController) GetBalanceOperationById(id int64) (
+func (b *BalanceOperationsController) GetBalanceOperationById(ctx context.Context, id int64) (
 	https.ApiResponse[models.GetBalanceOperationResponse],
 	error) {
-	req := b.prepareRequest("GET", fmt.Sprintf("/balance/operations/%s", id))
+	req := b.prepareRequest(ctx, "GET", fmt.Sprintf("/balance/operations/%s", id))
 	req.Authenticate(true)
 
 	decoder, resp, err := req.CallAsJson()

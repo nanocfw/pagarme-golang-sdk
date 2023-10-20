@@ -1,13 +1,13 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
 	"time"
 
-	"github.com/nanocfw/pagarme-golang-sdk/models"
-
 	"github.com/apimatic/go-core-runtime/https"
 	"github.com/apimatic/go-core-runtime/utilities"
+	"github.com/nanocfw/pagarme-golang-sdk/models"
 )
 
 type PlansController struct {
@@ -20,10 +20,10 @@ func NewPlansController(baseController baseController) *PlansController {
 }
 
 // Gets a plan
-func (p *PlansController) GetPlan(planId string) (
+func (p *PlansController) GetPlan(ctx context.Context, planId string) (
 	https.ApiResponse[models.GetPlanResponse],
 	error) {
-	req := p.prepareRequest("GET", fmt.Sprintf("/plans/%s", planId))
+	req := p.prepareRequest(ctx, "GET", fmt.Sprintf("/plans/%s", planId))
 	req.Authenticate(true)
 
 	decoder, resp, err := req.CallAsJson()
@@ -46,11 +46,12 @@ func (p *PlansController) GetPlan(planId string) (
 
 // Deletes a plan
 func (p *PlansController) DeletePlan(
+	ctx context.Context,
 	planId string,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetPlanResponse],
 	error) {
-	req := p.prepareRequest("DELETE", fmt.Sprintf("/plans/%s", planId))
+	req := p.prepareRequest(ctx, "DELETE", fmt.Sprintf("/plans/%s", planId))
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -76,12 +77,13 @@ func (p *PlansController) DeletePlan(
 
 // Updates the metadata from a plan
 func (p *PlansController) UpdatePlanMetadata(
+	ctx context.Context,
 	planId string,
 	request *models.UpdateMetadataRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetPlanResponse],
 	error) {
-	req := p.prepareRequest("PATCH", fmt.Sprintf("/Plans/%s/metadata", planId))
+	req := p.prepareRequest(ctx, "PATCH", fmt.Sprintf("/Plans/%s/metadata", planId))
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -108,6 +110,7 @@ func (p *PlansController) UpdatePlanMetadata(
 
 // Updates a plan item
 func (p *PlansController) UpdatePlanItem(
+	ctx context.Context,
 	planId string,
 	planItemId string,
 	body *models.UpdatePlanItemRequest,
@@ -115,6 +118,7 @@ func (p *PlansController) UpdatePlanItem(
 	https.ApiResponse[models.GetPlanItemResponse],
 	error) {
 	req := p.prepareRequest(
+		ctx,
 		"PUT",
 		fmt.Sprintf("/plans/%s/items/%s", planId, planItemId),
 	)
@@ -144,12 +148,13 @@ func (p *PlansController) UpdatePlanItem(
 
 // Adds a new item to a plan
 func (p *PlansController) CreatePlanItem(
+	ctx context.Context,
 	planId string,
 	request *models.CreatePlanItemRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetPlanItemResponse],
 	error) {
-	req := p.prepareRequest("POST", fmt.Sprintf("/plans/%s/items", planId))
+	req := p.prepareRequest(ctx, "POST", fmt.Sprintf("/plans/%s/items", planId))
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -176,11 +181,13 @@ func (p *PlansController) CreatePlanItem(
 
 // Gets a plan item
 func (p *PlansController) GetPlanItem(
+	ctx context.Context,
 	planId string,
 	planItemId string) (
 	https.ApiResponse[models.GetPlanItemResponse],
 	error) {
 	req := p.prepareRequest(
+		ctx,
 		"GET",
 		fmt.Sprintf("/plans/%s/items/%s", planId, planItemId),
 	)
@@ -206,11 +213,12 @@ func (p *PlansController) GetPlanItem(
 
 // Creates a new plan
 func (p *PlansController) CreatePlan(
+	ctx context.Context,
 	body *models.CreatePlanRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetPlanResponse],
 	error) {
-	req := p.prepareRequest("POST", "/plans")
+	req := p.prepareRequest(ctx, "POST", "/plans")
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)
@@ -236,12 +244,14 @@ func (p *PlansController) CreatePlan(
 
 // Removes an item from a plan
 func (p *PlansController) DeletePlanItem(
+	ctx context.Context,
 	planId string,
 	planItemId string,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetPlanItemResponse],
 	error) {
 	req := p.prepareRequest(
+		ctx,
 		"DELETE",
 		fmt.Sprintf("/plans/%s/items/%s", planId, planItemId),
 	)
@@ -270,6 +280,7 @@ func (p *PlansController) DeletePlanItem(
 
 // Gets all plans
 func (p *PlansController) GetPlans(
+	ctx context.Context,
 	page *int,
 	size *int,
 	name *string,
@@ -279,7 +290,7 @@ func (p *PlansController) GetPlans(
 	createdUntil *time.Time) (
 	https.ApiResponse[models.ListPlansResponse],
 	error) {
-	req := p.prepareRequest("GET", "/plans")
+	req := p.prepareRequest(ctx, "GET", "/plans")
 	req.Authenticate(true)
 	if page != nil {
 		req.QueryParam("page", *page)
@@ -322,12 +333,13 @@ func (p *PlansController) GetPlans(
 
 // Updates a plan
 func (p *PlansController) UpdatePlan(
+	ctx context.Context,
 	planId string,
 	request *models.UpdatePlanRequest,
 	idempotencyKey *string) (
 	https.ApiResponse[models.GetPlanResponse],
 	error) {
-	req := p.prepareRequest("PUT", fmt.Sprintf("/plans/%s", planId))
+	req := p.prepareRequest(ctx, "PUT", fmt.Sprintf("/plans/%s", planId))
 	req.Authenticate(true)
 	if idempotencyKey != nil {
 		req.Header("idempotency-key", *idempotencyKey)

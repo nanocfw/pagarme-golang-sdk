@@ -1,12 +1,12 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
-
-	"github.com/nanocfw/pagarme-golang-sdk/models"
 
 	"github.com/apimatic/go-core-runtime/https"
 	"github.com/apimatic/go-core-runtime/utilities"
+	"github.com/nanocfw/pagarme-golang-sdk/models"
 )
 
 type TransfersController struct {
@@ -19,10 +19,10 @@ func NewTransfersController(baseController baseController) *TransfersController 
 }
 
 // TODO: type endpoint description here
-func (t *TransfersController) GetTransferById(transferId string) (
+func (t *TransfersController) GetTransferById(ctx context.Context, transferId string) (
 	https.ApiResponse[models.GetTransfer],
 	error) {
-	req := t.prepareRequest("GET", fmt.Sprintf("/transfers/%s", transferId))
+	req := t.prepareRequest(ctx, "GET", fmt.Sprintf("/transfers/%s", transferId))
 	req.Authenticate(true)
 
 	decoder, resp, err := req.CallAsJson()
@@ -44,10 +44,10 @@ func (t *TransfersController) GetTransferById(transferId string) (
 }
 
 // TODO: type endpoint description here
-func (t *TransfersController) CreateTransfer(request *models.CreateTransfer) (
+func (t *TransfersController) CreateTransfer(ctx context.Context, request *models.CreateTransfer) (
 	https.ApiResponse[models.GetTransfer],
 	error) {
-	req := t.prepareRequest("POST", "/transfers/recipients")
+	req := t.prepareRequest(ctx, "POST", "/transfers/recipients")
 	req.Authenticate(true)
 	req.Json(request)
 	decoder, resp, err := req.CallAsJson()
@@ -69,10 +69,10 @@ func (t *TransfersController) CreateTransfer(request *models.CreateTransfer) (
 }
 
 // Gets all transfers
-func (t *TransfersController) GetTransfers() (
+func (t *TransfersController) GetTransfers(ctx context.Context) (
 	https.ApiResponse[models.ListTransfers],
 	error) {
-	req := t.prepareRequest("GET", "/transfers")
+	req := t.prepareRequest(ctx, "GET", "/transfers")
 	req.Authenticate(true)
 	decoder, resp, err := req.CallAsJson()
 	if err != nil {
