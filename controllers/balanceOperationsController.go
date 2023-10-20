@@ -3,6 +3,7 @@ package controllers
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/apimatic/go-core-runtime/https"
@@ -60,7 +61,7 @@ func (b *BalanceOperationsController) GetBalanceOperations(
 func (b *BalanceOperationsController) GetBalanceOperationById(ctx context.Context, id int64) (
 	https.ApiResponse[models.GetBalanceOperationResponse],
 	error) {
-	req := b.prepareRequest(ctx, "GET", fmt.Sprintf("/balance/operations/%s", id))
+	req := b.prepareRequest(ctx, "GET", fmt.Sprintf("/balance/operations/%s", strconv.FormatInt(id, 10)))
 	req.Authenticate(true)
 
 	decoder, resp, err := req.CallAsJson()

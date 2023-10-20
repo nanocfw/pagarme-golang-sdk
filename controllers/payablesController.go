@@ -3,6 +3,7 @@ package controllers
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/apimatic/go-core-runtime/https"
@@ -120,7 +121,7 @@ func (p *PayablesController) GetPayables(
 func (p *PayablesController) GetPayableById(ctx context.Context, id int64) (
 	https.ApiResponse[models.GetPayableResponse],
 	error) {
-	req := p.prepareRequest(ctx, "GET", fmt.Sprintf("/payables/%s", id))
+	req := p.prepareRequest(ctx, "GET", fmt.Sprintf("/payables/%s", strconv.FormatInt(id, 10)))
 	req.Authenticate(true)
 
 	decoder, resp, err := req.CallAsJson()
