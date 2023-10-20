@@ -14,7 +14,7 @@ import (
 	"github.com/apimatic/go-core-runtime/utilities"
 )
 
-type client struct {
+type Client struct {
 	callBuilderFactory          https.CallBuilderFactory
 	config                      Configuration
 	userAgent                   string
@@ -33,8 +33,8 @@ type client struct {
 }
 
 // Constructor for client.
-func NewClient(config Configuration) *client {
-	client := &client{
+func NewClient(config Configuration) *Client {
+	client := &Client{
 		config: config,
 	}
 
@@ -69,7 +69,7 @@ func NewClient(config Configuration) *client {
 	return client
 }
 
-func (c *client) GetCallBuilder() https.CallBuilderFactory {
+func (c *Client) GetCallBuilder() https.CallBuilderFactory {
 	return c.callBuilderFactory
 }
 
