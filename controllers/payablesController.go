@@ -2,8 +2,9 @@ package controllers
 
 import (
 	"fmt"
-	"pagarmeapisdk/models"
 	"time"
+
+	"github.com/nanocfw/pagarme-golang-sdk/models"
 
 	"github.com/apimatic/go-core-runtime/https"
 	"github.com/apimatic/go-core-runtime/utilities"

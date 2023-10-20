@@ -7,7 +7,8 @@ package controllers
 
 import (
 	"net/http"
-	"pagarmeapisdk/errors"
+
+	"github.com/nanocfw/pagarme-golang-sdk/errors"
 
 	"github.com/apimatic/go-core-runtime/https"
 )

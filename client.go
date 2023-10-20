@@ -7,7 +7,8 @@ package pagarmeapisdk
 
 import (
 	"net/http"
-	"pagarmeapisdk/controllers"
+
+	"github.com/nanocfw/pagarme-golang-sdk/controllers"
 
 	"github.com/apimatic/go-core-runtime/https"
 	"github.com/apimatic/go-core-runtime/utilities"
