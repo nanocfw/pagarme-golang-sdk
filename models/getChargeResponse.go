@@ -10,27 +10,27 @@ import (
 
 // Response object for getting a charge
 type GetChargeResponse struct {
-	Id                  types.Optional[string]                          `json:"id"`
-	Code                types.Optional[string]                          `json:"code"`
-	GatewayId           types.Optional[string]                          `json:"gateway_id"`
-	Amount              types.Optional[int]                             `json:"amount"`
-	Status              types.Optional[string]                          `json:"status"`
-	Currency            types.Optional[string]                          `json:"currency"`
-	PaymentMethod       types.Optional[string]                          `json:"payment_method"`
-	DueAt               types.Optional[time.Time]                       `json:"due_at"`
-	CreatedAt           types.Optional[time.Time]                       `json:"created_at"`
-	UpdatedAt           types.Optional[time.Time]                       `json:"updated_at"`
-	LastTransaction     types.Optional[GetTransactionResponseInterface] `json:"last_transaction"`
-	Invoice             types.Optional[GetInvoiceResponse]              `json:"invoice"`
-	Order               types.Optional[GetOrderResponse]                `json:"order"`
-	Customer            types.Optional[GetCustomerResponse]             `json:"customer"`
-	Metadata            types.Optional[map[string]string]               `json:"metadata"`
-	PaidAt              types.Optional[time.Time]                       `json:"paid_at"`
-	CanceledAt          types.Optional[time.Time]                       `json:"canceled_at"`
-	CanceledAmount      types.Optional[int]                             `json:"canceled_amount"`
-	PaidAmount          types.Optional[int]                             `json:"paid_amount"`
-	InterestAndFinePaid types.Optional[int]                             `json:"interest_and_fine_paid"`
-	RecurrencyCycle     types.Optional[string]                          `json:"recurrency_cycle"`
+	Id                  types.Optional[string]                      `json:"id"`
+	Code                types.Optional[string]                      `json:"code"`
+	GatewayId           types.Optional[string]                      `json:"gateway_id"`
+	Amount              types.Optional[int]                         `json:"amount"`
+	Status              types.Optional[string]                      `json:"status"`
+	Currency            types.Optional[string]                      `json:"currency"`
+	PaymentMethod       types.Optional[string]                      `json:"payment_method"`
+	DueAt               types.Optional[time.Time]                   `json:"due_at"`
+	CreatedAt           types.Optional[time.Time]                   `json:"created_at"`
+	UpdatedAt           types.Optional[time.Time]                   `json:"updated_at"`
+	LastTransaction     types.Optional[GetTransactionResponseField] `json:"last_transaction"`
+	Invoice             types.Optional[GetInvoiceResponse]          `json:"invoice"`
+	Order               types.Optional[GetOrderResponse]            `json:"order"`
+	Customer            types.Optional[GetCustomerResponse]         `json:"customer"`
+	Metadata            types.Optional[map[string]string]           `json:"metadata"`
+	PaidAt              types.Optional[time.Time]                   `json:"paid_at"`
+	CanceledAt          types.Optional[time.Time]                   `json:"canceled_at"`
+	CanceledAmount      types.Optional[int]                         `json:"canceled_amount"`
+	PaidAmount          types.Optional[int]                         `json:"paid_amount"`
+	InterestAndFinePaid types.Optional[int]                         `json:"interest_and_fine_paid"`
+	RecurrencyCycle     types.Optional[string]                      `json:"recurrency_cycle"`
 }
 
 func (g *GetChargeResponse) MarshalJSON() (
@@ -134,27 +134,27 @@ func (g *GetChargeResponse) toMap() map[string]any {
 
 func (g *GetChargeResponse) UnmarshalJSON(input []byte) error {
 	temp := &struct {
-		Id                  types.Optional[string]                          `json:"id"`
-		Code                types.Optional[string]                          `json:"code"`
-		GatewayId           types.Optional[string]                          `json:"gateway_id"`
-		Amount              types.Optional[int]                             `json:"amount"`
-		Status              types.Optional[string]                          `json:"status"`
-		Currency            types.Optional[string]                          `json:"currency"`
-		PaymentMethod       types.Optional[string]                          `json:"payment_method"`
-		DueAt               types.Optional[string]                          `json:"due_at"`
-		CreatedAt           types.Optional[string]                          `json:"created_at"`
-		UpdatedAt           types.Optional[string]                          `json:"updated_at"`
-		LastTransaction     types.Optional[GetTransactionResponseInterface] `json:"last_transaction"`
-		Invoice             types.Optional[GetInvoiceResponse]              `json:"invoice"`
-		Order               types.Optional[GetOrderResponse]                `json:"order"`
-		Customer            types.Optional[GetCustomerResponse]             `json:"customer"`
-		Metadata            types.Optional[map[string]string]               `json:"metadata"`
-		PaidAt              types.Optional[string]                          `json:"paid_at"`
-		CanceledAt          types.Optional[string]                          `json:"canceled_at"`
-		CanceledAmount      types.Optional[int]                             `json:"canceled_amount"`
-		PaidAmount          types.Optional[int]                             `json:"paid_amount"`
-		InterestAndFinePaid types.Optional[int]                             `json:"interest_and_fine_paid"`
-		RecurrencyCycle     types.Optional[string]                          `json:"recurrency_cycle"`
+		Id                  types.Optional[string]                      `json:"id"`
+		Code                types.Optional[string]                      `json:"code"`
+		GatewayId           types.Optional[string]                      `json:"gateway_id"`
+		Amount              types.Optional[int]                         `json:"amount"`
+		Status              types.Optional[string]                      `json:"status"`
+		Currency            types.Optional[string]                      `json:"currency"`
+		PaymentMethod       types.Optional[string]                      `json:"payment_method"`
+		DueAt               types.Optional[string]                      `json:"due_at"`
+		CreatedAt           types.Optional[string]                      `json:"created_at"`
+		UpdatedAt           types.Optional[string]                      `json:"updated_at"`
+		LastTransaction     types.Optional[GetTransactionResponseField] `json:"last_transaction"`
+		Invoice             types.Optional[GetInvoiceResponse]          `json:"invoice"`
+		Order               types.Optional[GetOrderResponse]            `json:"order"`
+		Customer            types.Optional[GetCustomerResponse]         `json:"customer"`
+		Metadata            types.Optional[map[string]string]           `json:"metadata"`
+		PaidAt              types.Optional[string]                      `json:"paid_at"`
+		CanceledAt          types.Optional[string]                      `json:"canceled_at"`
+		CanceledAmount      types.Optional[int]                         `json:"canceled_amount"`
+		PaidAmount          types.Optional[int]                         `json:"paid_amount"`
+		InterestAndFinePaid types.Optional[int]                         `json:"interest_and_fine_paid"`
+		RecurrencyCycle     types.Optional[string]                      `json:"recurrency_cycle"`
 	}{}
 	err := json.Unmarshal(input, &temp)
 	if err != nil {

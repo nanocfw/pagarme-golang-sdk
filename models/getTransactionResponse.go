@@ -285,7 +285,7 @@ func UnmarshalGetTransactionResponse(input []byte) (
 	GetTransactionResponseInterface,
 	error) {
 	discrim := &struct {
-		TransactionType *string
+		TransactionType *string `json:"transaction_type"`
 	}{}
 
 	err := json.Unmarshal(input, &discrim)
