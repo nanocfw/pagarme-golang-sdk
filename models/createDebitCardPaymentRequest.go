@@ -11,6 +11,7 @@ type CreateDebitCardPaymentRequest struct {
 	CardId              *string                              `json:"card_id,omitempty"`
 	CardToken           *string                              `json:"card_token,omitempty"`
 	Recurrence          *bool                                `json:"recurrence,omitempty"`
+	Capture             *bool                                `json:"capture,omitempty"`
 	Authentication      *CreatePaymentAuthenticationRequest  `json:"authentication,omitempty"`
 	Token               *CreateCardPaymentContactlessRequest `json:"token,omitempty"`
 }
@@ -38,6 +39,9 @@ func (c *CreateDebitCardPaymentRequest) toMap() map[string]any {
 	if c.Recurrence != nil {
 		structMap["recurrence"] = c.Recurrence
 	}
+	if c.Capture != nil {
+		structMap["capture"] = c.Capture
+	}
 	if c.Authentication != nil {
 		structMap["authentication"] = c.Authentication
 	}
@@ -54,6 +58,7 @@ func (c *CreateDebitCardPaymentRequest) UnmarshalJSON(input []byte) error {
 		CardId              *string                              `json:"card_id,omitempty"`
 		CardToken           *string                              `json:"card_token,omitempty"`
 		Recurrence          *bool                                `json:"recurrence,omitempty"`
+		Capture             *bool                                `json:"capture,omitempty"`
 		Authentication      *CreatePaymentAuthenticationRequest  `json:"authentication,omitempty"`
 		Token               *CreateCardPaymentContactlessRequest `json:"token,omitempty"`
 	}{}
@@ -67,6 +72,7 @@ func (c *CreateDebitCardPaymentRequest) UnmarshalJSON(input []byte) error {
 	c.CardId = temp.CardId
 	c.CardToken = temp.CardToken
 	c.Recurrence = temp.Recurrence
+	c.Capture = temp.Capture
 	c.Authentication = temp.Authentication
 	c.Token = temp.Token
 	return nil
