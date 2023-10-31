@@ -15,10 +15,10 @@ type CreateAddressRequest struct {
 	City         string                            `json:"city"`
 	State        string                            `json:"state"`
 	Country      string                            `json:"country"`
-	Complement   string                            `json:"complement"`
-	Metadata     types.Optional[map[string]string] `json:"metadata"`
-	Line1        string                            `json:"line_1"`
-	Line2        string                            `json:"line_2"`
+	Complement   string                            `json:"complement,omitempty"`
+	Metadata     types.Optional[map[string]string] `json:"metadata,omitempty"`
+	Line1        string                            `json:"line_1,omitempty"`
+	Line2        string                            `json:"line_2,omitempty"`
 }
 
 func (c *CreateAddressRequest) MarshalJSON() (

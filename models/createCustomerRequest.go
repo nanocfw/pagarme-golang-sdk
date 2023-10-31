@@ -11,9 +11,9 @@ type CreateCustomerRequest struct {
 	Document     string               `json:"document"`
 	Type         string               `json:"type"`
 	Address      CreateAddressRequest `json:"address"`
-	Metadata     map[string]string    `json:"metadata"`
+	Metadata     map[string]string    `json:"metadata,omitempty"`
 	Phones       CreatePhonesRequest  `json:"phones"`
-	Code         string               `json:"code"`
+	Code         string               `json:"code,omitempty"`
 	Gender       *string              `json:"gender,omitempty"`
 	DocumentType *string              `json:"document_type,omitempty"`
 }
