@@ -104,7 +104,8 @@ func CreateConfigurationFromEnvironment(options ...ConfigurationOptions) Configu
 type Server string
 
 const (
-	ENUMDEFAULT Server = "default"
+	CORE_V5 Server = "core_v5"
+	BIN_V1  Server = "bin_v1"
 )
 
 // Available Environments

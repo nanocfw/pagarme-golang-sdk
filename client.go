@@ -30,6 +30,7 @@ type Client struct {
 	TransactionsController      controllers.TransactionsController
 	PayablesController          controllers.PayablesController
 	BalanceOperationsController controllers.BalanceOperationsController
+	BinController               controllers.BinController
 }
 
 // Constructor for client.
@@ -42,7 +43,7 @@ func NewClient(config Configuration) *Client {
 	client.callBuilderFactory = callBuilderHandler(
 		func(server string) string {
 			if server == "" {
-				server = "default"
+				server = "core_v5"
 			}
 			return getBaseUri(Server(server), client.config)
 		},
@@ -66,6 +67,7 @@ func NewClient(config Configuration) *Client {
 	client.TransactionsController = *controllers.NewTransactionsController(*baseController)
 	client.PayablesController = *controllers.NewPayablesController(*baseController)
 	client.BalanceOperationsController = *controllers.NewBalanceOperationsController(*baseController)
+	client.BinController = *controllers.NewBinController(*baseController)
 	return client
 }
 
@@ -77,8 +79,12 @@ func getBaseUri(
 	server Server,
 	config Configuration) string {
 	if config.Environment() == Environment(PRODUCTION) {
-		if server == Server(ENUMDEFAULT) {
+		if server == Server(CORE_V5) {
 			return "https://api.pagar.me/core/v5"
+		}
+
+		if server == Server(BIN_V1) {
+			return "https://api.pagar.me/bin/v1"
 		}
 	}
 	return "TODO: Select a valid server."
