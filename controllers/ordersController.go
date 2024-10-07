@@ -1,8 +1,11 @@
 package controllers
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"time"
 
 	"github.com/apimatic/go-core-runtime/https"
@@ -223,7 +226,7 @@ func (o *OrdersController) CreateOrder(
 		req.Header("idempotency-key", *idempotencyKey)
 	}
 	req.Json(body)
-	decoder, resp, err := req.CallAsJson()
+	_, resp, err := req.CallAsJson()
 	if err != nil {
 		return https.ApiResponse[models.GetOrderResponse]{Response: resp}, err
 	}
@@ -231,6 +234,9 @@ func (o *OrdersController) CreateOrder(
 	if err != nil {
 		return https.ApiResponse[models.GetOrderResponse]{Response: resp}, err
 	}
+	buf, _ := io.ReadAll(resp.Body)
+	fmt.Println("PagarMe Response: ", string(buf[:]))
+	decoder := json.NewDecoder(bytes.NewReader(buf))
 
 	var result models.GetOrderResponse
 	result, err = utilities.DecodeResults[models.GetOrderResponse](decoder)
