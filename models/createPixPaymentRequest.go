@@ -10,7 +10,7 @@ import (
 type CreatePixPaymentRequest struct {
 	ExpiresAt             *time.Time                  `json:"expires_at,omitempty"`
 	ExpiresIn             *int                        `json:"expires_in,omitempty"`
-	AdditionalInformation *[]PixAdditionalInformation `json:"additional_information,omitempty"`
+	AdditionalInformation []*PixAdditionalInformation `json:"additional_information,omitempty"`
 }
 
 func (c *CreatePixPaymentRequest) MarshalJSON() (
@@ -37,7 +37,7 @@ func (c *CreatePixPaymentRequest) UnmarshalJSON(input []byte) error {
 	temp := &struct {
 		ExpiresAt             *string                     `json:"expires_at,omitempty"`
 		ExpiresIn             *int                        `json:"expires_in,omitempty"`
-		AdditionalInformation *[]PixAdditionalInformation `json:"additional_information,omitempty"`
+		AdditionalInformation []*PixAdditionalInformation `json:"additional_information,omitempty"`
 	}{}
 	err := json.Unmarshal(input, &temp)
 	if err != nil {
